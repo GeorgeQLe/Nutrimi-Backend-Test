@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+# from flask_restful import Resource, Api
 
 import os
 
@@ -9,6 +10,23 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'crud.sqlite')
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
+
+# api = Api(app)
+
+# class UserInfo(Resource):
+#     def get(self, id = -1, all = True, delete=False):
+#         if delete == True and id != -1:
+#             user_delete(id)
+        
+#         if id == -1:
+#             return get_user()
+#         else:
+#             return user_detail(id)
+
+#     def post(self):
+#         add_user()
+
+# api.add_resource(UserInfo, '/Nutrimi')
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
