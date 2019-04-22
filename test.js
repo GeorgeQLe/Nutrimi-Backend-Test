@@ -2,7 +2,7 @@
 
 // this url: https://aboutreact.com/example-of-sqlite-database-in-react-native/
 // has the npm commands to install sqlite into the react native app
-import { openDatabase } from 'react-native-sqlite-storage';
+// import { openDatabase } from 'react-native-sqlite-storage';
 
 var custID = "cus_MASWsf9DntbhIV";
 var signatureSecret = "b0cda13d-fc65-4243-ae73-32c2a59b7612";
@@ -13,12 +13,23 @@ var deliveryAPIkeySandbox = "5f1b5928-69f7-49de-a2c9-b54fb68796d1";
 //  -d “pickup_address=101 Market St, San Francisco, CA 94105” \
 //  -X POST https://api.postmates.com/v1/customers/cus_abc123/delivery_quotes
 
-function requestPostMatesQuote(resturantAddress, pickupAddress) {
-    var URL = "https://api.postmates.com/v1/customers/cus_MASWsf9DntbhIV/delivery_quotes";
+var resturantAddress = "100 University Ave, Lowell, MA 01854";
+var pickupAddress = "945 Riverside Dr., Methuen, MA 01844";
+
+var proxy = "https://cors-anywhere.herokuapp.com/";
+
+function requestPostMatesQuote() {
+    var URL = proxy + "https://api.postmates.com/v1/customers/" + custID + "/delivery_quotes";
+    console.log(URL);
     var response = $.ajax({
         type: 'POST',
         url: URL,
-        headers: deliveryAPIkeySandbox,
+        xhrFields: {
+            withCredentials: true
+        },
+        header: {
+            'Authorization' : 'Basic ' + btoa(deliveryAPIkeySandbox + ":" + "hello")
+        },
         data: {
             dropoff_address: resturantAddress,
             pickup_address: pickupAddress
