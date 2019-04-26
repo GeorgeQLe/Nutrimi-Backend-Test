@@ -2,12 +2,12 @@ from flask import Blueprint, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
-import app
+from flask_app import app
 
-db = SQLAlchemy(app.app)
-ma = Marshmallow(app.app)
+db = SQLAlchemy(app)
+ma = Marshmallow(app)
 
-sqlite_flask = Blueprint(name='sqlite_flask', import_name=__name__)
+sqlite_flask = Blueprint('sqlite_flask', __name__)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -154,7 +154,7 @@ def transaction_update(id):
     return transaction_schema.jsonify(transaction)
 
 # endpoint to delete transaction
-@sqlite_flask.route("/user/<id>", methods=["DELETE"])
+@sqlite_flask.route("/transaction/<id>", methods=["DELETE"])
 def transaction_delete(id):
     transaction = Transaction.query.get(id)
     db.session.delete(transaction)
