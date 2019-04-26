@@ -2,6 +2,15 @@
 
 from flask import jsonify
 
+class Postmates_data():
+    def __init__(self, restaurant_address = " ", user_address = " "):
+        self.restaurant_address = restaurant_address
+        self.user_address = user_address
+
+def jsonify_postmates_API_data(data= Postmates_data()):
+    return jsonify(data.restaurant_address,
+                    data.user_address)
+
 class yelp_API_data:
     def __init__(self, food_type = " ", location = " ", limit=10, open_now = True, sort_by = "rating"):
         self.food_type = food_type

@@ -2,6 +2,7 @@
 
 from flask import Blueprint, request
 import requests
+import json
 
 from api_data import yelp_API_data, jsonify_yelp_API_data
 
@@ -46,6 +47,10 @@ def change_all():
 
     return jsonify_yelp_API_data(data)
 
+@yelp_api.route("/check_setup", methods=["GET"])
+def check_data():
+    return jsonify_yelp_API_data(data)
+
 yelp_url = 'https://api.yelp.com/v3/businesses/search'
 
 @yelp_api.route("/yelp_call", methods=["GET"])
@@ -57,11 +62,11 @@ def search_businesses():
     }
     params = {
         "term": data.food_type,
-        "location": data.location,
-        "limit": data.limit,
-        "open_now": data.open_now,
-        "sort_by": data.sort_by
+        "location": data.location
+        #"limit": data.limit
+        # "open_now": data.open_now,
+        # "sort_by": data.sort_by
     }
 
     r = requests.get(yelp_url, headers=headers, params= params)
-    return r
+    return json.dumps(r.json())
