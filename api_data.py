@@ -2,12 +2,12 @@
 
 from flask import jsonify
 
-class Postmates_data():
+class postmates_API_data():
     def __init__(self, restaurant_address = " ", user_address = " "):
         self.restaurant_address = restaurant_address
         self.user_address = user_address
 
-def jsonify_postmates_API_data(data= Postmates_data()):
+def jsonify_postmates_API_data(data= postmates_API_data()):
     return jsonify(data.restaurant_address,
                     data.user_address)
 
