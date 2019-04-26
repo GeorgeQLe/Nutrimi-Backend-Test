@@ -1,11 +1,13 @@
-from flask import request, jsonify
+from flask import Blueprint, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
-from app import app
+import app
 
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
+db = SQLAlchemy(app.app)
+ma = Marshmallow(app.app)
+
+sqlite_flask = Blueprint(name='sqlite_flask', import_name=__name__)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -27,7 +29,7 @@ user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
 # endpoint to create new user
-@app.route("/user", methods=["POST"])
+@sqlite_flask.route("/user", methods=["POST"])
 def add_user():
     username = request.json['username']
     email = request.json['email']
@@ -41,20 +43,20 @@ def add_user():
     return jsonify(new_user.username, new_user.email, new_user.address)
 
 # endpoint to show all users
-@app.route("/user", methods=["GET"])
+@sqlite_flask.route("/user", methods=["GET"])
 def get_user():
     all_users = User.query.all()
     result = users_schema.dump(all_users)
     return jsonify(result.data)
 
 # endpoint to get user detail by id
-@app.route("/user/<id>", methods=["GET"])
+@sqlite_flask.route("/user/<id>", methods=["GET"])
 def user_detail(id):
     user = User.query.get(id)
     return user_schema.jsonify(user)
 
 # endpoint to update user
-@app.route("/user/<id>", methods=["PUT"])
+@sqlite_flask.route("/user/<id>", methods=["PUT"])
 def user_update(id):
     user = User.query.get(id)
     username = request.json['username']
@@ -69,7 +71,7 @@ def user_update(id):
     return user_schema.jsonify(user)
 
 # endpoint to delete user
-@app.route("/user/<id>", methods=["DELETE"])
+@sqlite_flask.route("/user/<id>", methods=["DELETE"])
 def user_delete(id):
     user = User.query.get(id)
     db.session.delete(user)
@@ -101,7 +103,7 @@ transaction_schema = TransactionSchema()
 transactions_schema = TransactionSchema(many=True)
 
 # endpoint to create a new transaction
-@app.route("/transaction", methods=["POST"])
+@sqlite_flask.route("/transaction", methods=["POST"])
 def add_transaction():
     user_id = request.json['user_id']
     fee = request.json['fee']
@@ -117,7 +119,7 @@ def add_transaction():
     return jsonify(new_transaction)
 
 # endpoint to get all transactions
-@app.route("/transaction", methods=["GET"])
+@sqlite_flask.route("/transaction", methods=["GET"])
 def get_transaction():
     all_transactions = Transaction.query.all()
     result = transactions_schema.dump(all_transactions)
@@ -125,14 +127,14 @@ def get_transaction():
     return jsonify(result.data)
 
 # endpoint to get transaction detail by id
-@app.route("/transaction/<id>", methods=["GET"])
+@sqlite_flask.route("/transaction/<id>", methods=["GET"])
 def transaction_detail(id):
     transaction = Transaction.query.get(id)
     
     return transaction_schema.jsonify(transaction)
 
 # endpoint to update transaction
-@app.route("/transaction/<id>", methods=["PUT"])
+@sqlite_flask.route("/transaction/<id>", methods=["PUT"])
 def transaction_update(id):
     transaction = Transaction.query.get(id)
     user_id = request.json['user_id']
@@ -152,7 +154,7 @@ def transaction_update(id):
     return transaction_schema.jsonify(transaction)
 
 # endpoint to delete transaction
-@app.route("/user/<id>", methods=["DELETE"])
+@sqlite_flask.route("/user/<id>", methods=["DELETE"])
 def transaction_delete(id):
     transaction = Transaction.query.get(id)
     db.session.delete(transaction)
