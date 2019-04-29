@@ -39,8 +39,6 @@ def get_addresses():
 @postmates_api.route("/get_quote", methods=["GET"])
 def get_quote():
     headers = {
-        'Accept' : 'application/json',
-        'Content-Type' : 'application/json',
         'Authorization' : 'Basic ' + delivery_API_key_sandbox
     }
     params = {

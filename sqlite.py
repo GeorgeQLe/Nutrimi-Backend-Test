@@ -14,8 +14,9 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True)
     email = db.Column(db.String(120), unique=True)
     address = db.Column(db.String(120))
-
+    
     def __init__(self, username, email, address):
+        print(self.id)
         self.username = username
         self.email = email
         self.address = address
@@ -23,7 +24,7 @@ class User(db.Model):
 class UserSchema(ma.Schema):
     class Meta:
         # Fields to expose
-        fields = ('username', 'email', 'address')
+        fields = ('id', 'username', 'email', 'address')
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
