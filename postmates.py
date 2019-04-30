@@ -6,7 +6,7 @@ from api_data import postmates_API_data, jsonify_postmates_API_data
 
 customer_ID = "cus_MASWsf9DntbhIV"
 signature_secret = "b0cda13d-fc65-4243-ae73-32c2a59b7612"
-delivery_API_key_sandbox = "5f1b5928-69f7-49de-a2c9-b54fb68796d1:"
+delivery_API_key_sandbox = "5f1b5928-69f7-49de-a2c9-b54fb68796d1"
 postmates_url = "https://api.postmates.com/v1/customers/" + customer_ID + "/delivery_quotes"
 
 postmates_api = Blueprint('postmates_api', __name__)
@@ -38,13 +38,17 @@ def get_addresses():
 
 @postmates_api.route("/get_quote", methods=["GET"])
 def get_quote():
-    headers = {
-        'Authorization' : 'Basic ' + delivery_API_key_sandbox
-    }
-    params = {
+
+    quote_data  = {
         "dropoff_address" : data.restaurant_address,
         "pickup_address" : data.user_address
     }
+    print(quote_data)
+    r = requests.post(postmates_url, auth=(delivery_API_key_sandbox, ''), data=quote_data)
+    print(r.json())
+    return json.dumps(r.json()
+)
 
-    r = requests.get(postmates_url, headers=headers, params=params)
-    return json.dumps(r.json())
+@postmates_api.route("/get_delivery", methods=["GET"])
+def get_delivery():
+    pass
