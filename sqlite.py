@@ -14,16 +14,20 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True)
     email = db.Column(db.String(120), unique=True)
     address = db.Column(db.String(120))
+    user_id = db.Column(db.String(120), unique=True)
+    current_id = 0
 
     def __init__(self, username, email, address):
         self.username = username
         self.email = email
         self.address = address
+        User.current_id += 1
+        self.user_id = username + "#" +  str(User.current_id)
 
 class UserSchema(ma.Schema):
     class Meta:
         # Fields to expose
-        fields = ('username', 'email', 'address')
+        fields = ('id' ,'username', 'email', 'address', 'user_id')
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
@@ -36,7 +40,7 @@ def add_user():
     address = request.json['address']
 
     new_user = User(username, email, address)
-
+    User.active_ids = new_user.id
     db.session.add(new_user)
     db.session.commit()
 
@@ -48,6 +52,10 @@ def get_user():
     all_users = User.query.all()
     result = users_schema.dump(all_users)
     return jsonify(result.data)
+
+# endpoint to get the db ids for all users
+def get_user_ids():
+    return User.active_ids
 
 # endpoint to get user detail by id
 @sqlite_flask.route("/user/<id>", methods=["GET"])
@@ -86,6 +94,8 @@ class Transaction(db.Model):
     dropoff_address = db.Column(db.String(200))
     pickup_address = db.Column(db.String(200))
     status = db.Column(db.Integer)
+    transaction_id = db.Column(db.Integer)
+    current_id = 1
 
     def __init__(self, user_id, fee, dropoff_address, pickup_address, status):
         self.user_id = user_id
